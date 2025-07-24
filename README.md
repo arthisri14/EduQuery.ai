@@ -57,6 +57,9 @@ EduQuery.ai/
 
 <img width="1885" height="865" alt="image" src="https://github.com/user-attachments/assets/db2c4140-81e1-440b-b19b-92245774541f" />
 
+<img width="1910" height="885" alt="image" src="https://github.com/user-attachments/assets/7db26e49-1614-4039-8b8b-956c47ff528e" />
+
+
 
 ##  Setup Instructions
 
