@@ -53,6 +53,11 @@ EduQuery.ai/
 
 ---
 
+## Upload and Query Chat page
+
+<img width="1885" height="865" alt="image" src="https://github.com/user-attachments/assets/db2c4140-81e1-440b-b19b-92245774541f" />
+
+
 ##  Setup Instructions
 
 ### 1. Clone the Repo
