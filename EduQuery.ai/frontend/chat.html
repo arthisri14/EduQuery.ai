@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EduQuery AI - Chat</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e1bee7);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chat-header {
+      padding: 20px;
+      background: #2b8aed;
+      color: white;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-message {
+      padding: 12px;
+      border-radius: 12px;
+      max-width: 70%;
+    }
+
+    .user {
+      background: #d1ecf1;
+      align-self: flex-end;
+    }
+
+    .bot {
+      background: #f1f8e9;
+      align-self: flex-start;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 20px;
+      border-top: 1px solid #ccc;
+      background: white;
+    }
+
+    .chat-input textarea {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-size: 16px;
+    }
+
+    .chat-input button {
+      margin-left: 10px;
+      background: #2b8aed;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .chat-input button:hover {
+      background: #1e6cd6;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-header">🤖 EduQuery AI Chat</div>
+  <div class="chat-box" id="chatBox"></div>
+  <form class="chat-input" id="queryForm">
+    <textarea id="queryInput" rows="2" placeholder="Ask something about your document..." required></textarea>
+    <button type="submit">Send</button>
+  </form>
+
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const form = document.getElementById('queryForm');
+    const input = document.getElementById('queryInput');
+
+    function addMessage(text, sender = 'user') {
+      const msg = document.createElement('div');
+      msg.className = `chat-message ${sender}`;
+      msg.innerHTML = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const question = input.value.trim();
+      if (!question) return;
+
+      // show user message
+      addMessage(question, 'user');
+      input.value = '';
+
+      // add loader placeholder
+      const loader = document.createElement('div');
+      loader.className = 'chat-message bot';
+      loader.innerHTML = `<em>Thinking...</em>`;
+      chatBox.appendChild(loader);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const res = await fetch('/api/docs/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question })
+        });
+
+        const data = await res.json();
+        const answer = data.answer || 'No answer found.';
+        loader.innerHTML = answer;  // replace loader with response
+      } catch (err) {
+        console.error(err);
+        loader.innerHTML = 'Error fetching answer. Please try again.';
+      }
+    });    
+    
+    // Optional: Redirect if user hasn't uploaded a doc
+    if (!localStorage.getItem('docUploaded')) {
+      window.location.href = 'upload.html';
+    }
+  </script>
+</body>
+</html>
