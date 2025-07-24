@@ -6,78 +6,80 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
+    :root {
+      --primary: #2b8aed;
+      --bot-bg: linear-gradient(135deg, #dce35b, #45b649);
+      --user-bg: linear-gradient(135deg, #6dd5ed, #2193b0);
+    }
+
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(to right, #e0f7fa, #e1bee7);
-      margin: 0;
       display: flex;
-      flex-direction: column;
       height: 100vh;
-      transition: background 0.3s;
     }
 
-    body.dark-mode {
-      background: linear-gradient(to right, #2c3e50, #4ca1af);
+    .sidebar {
+      width: 250px;
+      background: #f4f4f4;
+      border-right: 1px solid #ccc;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .chat-history {
+      list-style: none;
+    }
+
+    .chat-history li {
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .chat-history li:hover {
+      background: #e0f0ff;
+    }
+
+    .new-chat {
+      margin-top: 20px;
+      background: var(--primary);
       color: white;
+      padding: 10px;
+      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .main-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .chat-header {
       padding: 20px;
-      background: #2b8aed;
+      background: var(--primary);
       color: white;
-      text-align: center;
-      font-size: 24px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .toggle-container {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 24px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0;
-      right: 0; bottom: 0;
-      background-color: #ccc;
-      border-radius: 24px;
-      transition: 0.4s;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px; width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      border-radius: 50%;
-      transition: 0.4s;
-    }
-
-    input:checked + .slider {
-      background-color: #2b8aed;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(26px);
+    .chat-header img {
+      height: 36px;
     }
 
     .chat-box {
@@ -87,151 +89,194 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.3);
-      margin: 10px;
-      border-radius: 16px;
     }
 
     .chat-message {
-      padding: 12px;
-      border-radius: 12px;
-      max-width: 70%;
+      display: flex;
+      gap: 10px;
+      max-width: 80%;
       animation: fadeInUp 0.3s ease;
     }
 
-    .user {
-      background: linear-gradient(135deg, #6dd5ed, #2193b0);
-      color: white;
-      align-self: flex-end;
-    }
-
-    .bot {
-      background: linear-gradient(135deg, #dce35b, #45b649);
-      color: black;
+    .chat-message.bot {
       align-self: flex-start;
     }
 
+    .chat-message.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .chat-message .bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      max-width: 100%;
+      word-wrap: break-word;
+    }
+
+    .bot .bubble {
+      background: var(--bot-bg);
+      color: #222;
+    }
+
+    .user .bubble {
+      background: var(--user-bg);
+      color: white;
+    }
+
+    .chat-message img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
     .chat-input {
-      display: flex;
       padding: 20px;
       border-top: 1px solid #ccc;
       background: white;
-      position: sticky;
-      bottom: 0;
-      z-index: 10;
+      display: flex;
+      gap: 10px;
     }
 
     .chat-input textarea {
       flex: 1;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
       resize: none;
+      border-radius: 8px;
+      padding: 12px;
       font-size: 16px;
-    }
-
-    .chat-input textarea:focus {
-      border-color: #2b8aed;
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(43, 138, 237, 0.2);
     }
 
     .chat-input button {
-      margin-left: 10px;
-      background: #2b8aed;
+      background: var(--primary);
       color: white;
+      padding: 12px 18px;
       border: none;
-      padding: 12px 20px;
-      font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .chat-input button:hover {
-      background: #1e6cd6;
-      transform: scale(1.03);
-      box-shadow: 0 4px 12px rgba(43, 138, 237, 0.3);
     }
 
     .typing span {
       display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin: 0 2px;
+      width: 8px; height: 8px;
       background: #888;
       border-radius: 50%;
       animation: bounce 1.4s infinite ease-in-out both;
+      margin: 0 2px;
     }
 
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes fadeInUp {
-      from { transform: translateY(10px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
 
     @keyframes bounce {
       0%, 80%, 100% { transform: scale(0); }
       40% { transform: scale(1); }
     }
 
-    @media (max-width: 600px) {
-      .chat-message {
-        max-width: 100%;
-      }
-      .chat-input textarea {
-        font-size: 14px;
-      }
+    @keyframes fadeInUp {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .chat-message { max-width: 100%; }
     }
   </style>
 </head>
 <body>
-  <div class="chat-header">
-    🤖 EduQuery AI Chat
-    <div class="toggle-container">
-      <label class="switch">
-        <input type="checkbox" id="themeToggle">
-        <span class="slider"></span>
-      </label>
-    </div>
+  <div class="sidebar">
+    <h2>Chat History</h2>
+    <ul class="chat-history" id="historyList"></ul>
+    <div class="new-chat" onclick="startNewChat()">➕ New Chat</div>
   </div>
 
-  <div class="chat-box" id="chatBox"></div>
+  <div class="main-chat">
+    <div class="chat-header">
+      <img src="/static/logo.png" alt="App Logo">
+    </div>
 
-  <form class="chat-input" id="queryForm">
-    <textarea id="queryInput" rows="2" placeholder="Ask something about your document..." required></textarea>
-    <button type="submit">Send</button>
-  </form>
+    <div class="chat-box" id="chatBox"></div>
+
+    <form class="chat-input" id="queryForm">
+      <textarea id="queryInput" rows="2" placeholder="Ask something..." required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
 
   <script>
     const chatBox = document.getElementById('chatBox');
     const form = document.getElementById('queryForm');
     const input = document.getElementById('queryInput');
+    const historyList = document.getElementById('historyList');
+    let currentChat = [];
 
-    function addMessage(text, sender = 'user') {
+    function renderChat(messages) {
+      chatBox.innerHTML = '';
+      messages.forEach(m => addMessage(m.text, m.sender, false));
+    }
+
+    function addMessage(text, sender = 'user', save = true) {
       const msg = document.createElement('div');
       msg.className = `chat-message ${sender}`;
-      msg.innerHTML = text;
+      msg.innerHTML = `
+        <img src="${sender === 'user' ? 'https://img.icons8.com/ios-filled/50/user.png' : 'https://img.icons8.com/ios-filled/50/robot.png'}" />
+        <div class="bubble">${text}</div>
+      `;
       chatBox.appendChild(msg);
       chatBox.scrollTop = chatBox.scrollHeight;
+      if (save) {
+        currentChat.push({ text, sender });
+        localStorage.setItem('lastChat', JSON.stringify(currentChat));
+        updateHistory(); // update immediately
+      }
+    }
+
+    function loadHistory() {
+      const lastChat = localStorage.getItem('lastChat');
+      if (lastChat) {
+        currentChat = JSON.parse(lastChat);
+        renderChat(currentChat);
+      }
+
+      updateHistory();
+    }
+
+    function updateHistory() {
+      const all = JSON.parse(localStorage.getItem('allChats') || '[]');
+      historyList.innerHTML = '';
+      all.forEach((chat, i) => {
+        const item = document.createElement('li');
+        const firstUserMsg = chat.find(m => m.sender === 'user');
+        item.textContent = firstUserMsg ? firstUserMsg.text.slice(0, 30) + '...' : `Chat #${i + 1}`;
+        item.onclick = () => {
+          currentChat = chat;
+          renderChat(currentChat);
+        };
+        historyList.appendChild(item);
+      });
+    }
+
+    function startNewChat() {
+      currentChat = [];
+      let all = JSON.parse(localStorage.getItem('allChats') || '[]');
+      all.push([]);
+      localStorage.setItem('allChats', JSON.stringify(all));
+      localStorage.setItem('lastChat', JSON.stringify(currentChat));
+      renderChat([]);
+      updateHistory();
     }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const question = input.value.trim();
       if (!question) return;
-
       addMessage(question, 'user');
-      input.value = '';
 
       const loader = document.createElement('div');
       loader.className = 'chat-message bot';
       loader.innerHTML = `
-        <div class="typing">
+        <img src="https://img.icons8.com/ios-filled/50/robot.png" />
+        <div class="bubble typing">
           <span></span><span></span><span></span>
         </div>`;
       chatBox.appendChild(loader);
@@ -243,23 +288,33 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question })
         });
-
         const data = await res.json();
         const answer = data.answer || 'No answer found.';
-        loader.innerHTML = answer;
+        loader.innerHTML = `<img src="https://img.icons8.com/ios-filled/50/robot.png" />
+                            <div class="bubble">${answer}</div>`;
+        currentChat.push({ text: answer, sender: 'bot' });
+        localStorage.setItem('lastChat', JSON.stringify(currentChat));
+
+        let all = JSON.parse(localStorage.getItem('allChats') || '[]');
+        all[all.length - 1] = currentChat;
+        localStorage.setItem('allChats', JSON.stringify(all));
+        updateHistory();
       } catch (err) {
-        console.error(err);
-        loader.innerHTML = 'Error fetching answer. Please try again.';
+        loader.innerHTML = '❌ Error fetching response.';
       }
+
+      input.value = '';
     });
 
-    if (!localStorage.getItem('docUploaded')) {
-      window.location.href = 'upload.html';
-    }
-
-    document.getElementById('themeToggle').addEventListener('change', function () {
-      document.body.classList.toggle('dark-mode');
-    });
+    window.onload = () => {
+      if (!localStorage.getItem('docUploaded')) {
+        window.location.href = 'upload.html';
+      }
+      loadHistory();
+      if (!localStorage.getItem('allChats')) {
+        localStorage.setItem('allChats', JSON.stringify([[]]));
+      }
+    };
   </script>
 </body>
 </html>
