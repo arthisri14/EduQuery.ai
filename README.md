@@ -69,10 +69,11 @@ npm install
 ### 3. Create .env File
 
 ```bash
-PORT=3000
-OPENAI_API_KEY=your_openai_api_key
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_KEY=your_supabase_service_key
+PORT=5000
+GEMINI_API_KEY=your_gemini_api_key
+DB_NAME=your_db_name
+DB_PASS=your_db_password
+DB_HOST=localhost
 ```
 
 ### 4. Run the App
@@ -84,11 +85,8 @@ App will run at: http://localhost:5000
 
 ##  Usage Flow
 
-Go to /upload — Upload a PDF file (e.g., resume, report).
-
-The file is processed, vectorized, and stored.
-
-Redirects to /chat — Chat interface opens.
-
-Ask any query related to the uploaded content. The app uses LLM + vector search for context-aware answers.
+ - Go to /upload — Upload a PDF file (e.g., resume, report).
+ - The file is processed, vectorized, and stored.
+ - Redirects to /chat — Chat interface opens.
+ - Ask any query related to the uploaded content. The app uses LLM + vector search for context-aware answers.
 
