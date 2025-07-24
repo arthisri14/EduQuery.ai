@@ -1,93 +1,108 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-    <meta charset="UTF-8" />
-    <title>EduQuery AI - Upload</title>
-    <style>
-        body {
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(to right, #a1c4fd, #c2e9fb);
-        margin: 0;
-        padding: 0;
-        }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EduQuery AI - Upload</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+      margin: 0;
+      padding: 0;
+    }
 
-        .upload-container {
-        max-width: 500px;
-        margin: 80px auto;
-        background: white;
-        padding: 40px;
-        border-radius: 16px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        text-align: center;
-        }
+    .upload-container {
+      max-width: 500px;
+      margin: 80px auto;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      text-align: center;
+    }
 
-        h1 {
-        margin-bottom: 20px;
-        color: #2b8aed;
-        }
+    h1 {
+      margin-bottom: 20px;
+      color: #2b8aed;
+    }
 
-        input[type="file"] {
-        display: block;
-        margin: 20px auto;
-        }
+    input[type="file"] {
+      display: block;
+      margin: 20px auto;
+    }
 
-        button {
-        background: #2b8aed;
-        color: white;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-        }
+    button {
+      background: #2b8aed;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-        button:hover {
-        background-color: #1e6cd6;
-        }
+    button:hover {
+      background-color: #1e6cd6;
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(43, 138, 237, 0.3);
+    }
 
-        .status {
-        margin-top: 15px;
-        color: #4caf50;
-        font-weight: bold;
-        }
-    </style>
-    </head>
-    <body>
-    <div class="upload-container">
-        <h1>📄 Upload Document</h1>
-        <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" name="file" id="fileInput" required />
-        <button type="submit">Upload & Chat 💬</button>
-        <div id="status" class="status"></div>
-        </form>
-    </div>
+    .status {
+      margin-top: 15px;
+      color: #4caf50;
+      font-weight: bold;
+    }
 
-    <script>
-        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const file = document.getElementById('fileInput').files[0];
-        if (!file) return alert('Please select a file.');
+    .spinner {
+      font-size: 18px;
+      color: #2b8aed;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-container">
+    <h1>📄 Upload Document</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" id="fileInput" required />
+      <button type="submit">Upload & Chat 💬</button>
+      <div id="status" class="status"></div>
+    </form>
+  </div>
 
-        const formData = new FormData();
-        formData.append('file', file);
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return alert('Please select a file.');
 
-        try {
-            const res = await fetch('/api/docs/upload', {
-            method: 'POST',
-            body: formData
-            });
-            const data = await res.json();
-            if (res.ok) {
-            localStorage.setItem('docUploaded', 'true'); // flag for chat page
-            window.location.href = 'chat.html';
-            } else {
-            document.getElementById('status').textContent = data.error || 'Upload failed.';
-            }
-        } catch (err) {
-            console.error(err);
-            document.getElementById('status').textContent = 'An error occurred during upload.';
-        }
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const status = document.getElementById('status');
+      status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
+      try {
+        const res = await fetch('/api/docs/upload', {
+          method: 'POST',
+          body: formData
         });
-    </script>
-    </body>
-    </html>
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem('docUploaded', 'true');
+          window.location.href = 'chat.html';
+        } else {
+          status.textContent = data.error || 'Upload failed.';
+        }
+      } catch (err) {
+        console.error(err);
+        status.textContent = 'An error occurred during upload.';
+      }
+    });
+  </script>
+</body>
+</html>
