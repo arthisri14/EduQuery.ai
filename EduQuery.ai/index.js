@@ -40,7 +40,22 @@
   app.get('/', (req, res) => {
     res.sendFile(path.join(frontendPath, 'upload.html'));
   });
+  const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+});
+
+const upload = multer({ storage });
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).send('No file uploaded');
+  console.log(' File uploaded:', req.file.filename);
+  res.redirect('/chat');
+});
+
 
   app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(` Server running at http://localhost:${PORT}`);
   });
