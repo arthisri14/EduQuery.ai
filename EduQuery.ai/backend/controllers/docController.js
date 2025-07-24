@@ -94,16 +94,17 @@ exports.uploadDocument = async (req, res) => {
 // Query documents using question and Gemini
 exports.queryDocuments = async (req, res) => {
   try {
-    const { question } = req.body;
-    if (!question) return res.status(400).json({ error: 'No question provided.' });
+    const { question, docId } = req.body;
+    if (!question || !docId) return res.status(400).json({ error: 'Missing question or document ID.' });
 
     const queryEmbedding = await getEmbeddingFromGemini(question);
     if (!queryEmbedding) return res.status(500).json({ error: 'Failed to embed question.' });
 
     const [rows] = await db.execute(
-      'SELECT chunk, embedding FROM embeddings WHERE embedding IS NOT NULL'
+      'SELECT chunk, embedding FROM embeddings WHERE document_id = ? AND embedding IS NOT NULL',
+      [docId]
     );
-    if (!rows.length) return res.status(404).json({ error: 'No embeddings found.' });
+    if (!rows.length) return res.status(404).json({ error: 'No embeddings found for this document.' });
 
     const scoredChunks = rows.map(row => {
       try {

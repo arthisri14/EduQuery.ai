@@ -203,12 +203,20 @@
     </form>
   </div>
 
-  <script>
+   <script>
     const chatBox = document.getElementById('chatBox');
     const form = document.getElementById('queryForm');
     const input = document.getElementById('queryInput');
     const historyList = document.getElementById('historyList');
     let currentChat = [];
+
+    // ✅ Extract docId from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const docId = urlParams.get('docId');
+    if (!docId) {
+      alert('Missing document ID. Please upload a document.');
+      window.location.href = 'upload.html';
+    }
 
     function renderChat(messages) {
       chatBox.innerHTML = '';
@@ -237,7 +245,6 @@
         currentChat = JSON.parse(lastChat);
         renderChat(currentChat);
       }
-
       updateHistory();
     }
 
@@ -266,6 +273,7 @@
       updateHistory();
     }
 
+    // ✅ Updated submit handler to send docId
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const question = input.value.trim();
@@ -286,8 +294,12 @@
         const res = await fetch('/api/docs/query', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question })
+          body: JSON.stringify({
+            question,
+            docId: docId // ✅ Sending document ID to backend
+          })
         });
+
         const data = await res.json();
         const answer = data.answer || 'No answer found.';
         loader.innerHTML = `<img src="https://img.icons8.com/ios-filled/50/robot.png" />
