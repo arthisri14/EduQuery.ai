@@ -91,6 +91,35 @@ node index.js
 ```
 App will run at: http://localhost:5000
 
+### 5: Set Up the MySQL Database
+
+```
+<details> <summary>Click to expand SQL setup code</summary>
+-- Create the database
+CREATE DATABASE eduquery;
+
+-- Switch to the database
+USE eduquery;
+
+-- Create documents table
+CREATE TABLE documents (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    content TEXT,
+    embedding TEXT
+);
+
+-- Create embeddings table
+CREATE TABLE embeddings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    document_id INT NOT NULL,
+    chunk TEXT,
+    embedding TEXT,
+    FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+);
+</details>
+```
+
 ##  Usage Flow
 
  - Go to /upload — Upload a PDF file (e.g., resume, report).
