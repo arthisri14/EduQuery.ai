@@ -125,7 +125,9 @@ CREATE TABLE embeddings (
 );
 
 </details>
+
 ```
+
 
 ##  Usage Flow
 
