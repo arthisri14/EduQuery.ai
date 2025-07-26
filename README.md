@@ -59,7 +59,12 @@ EduQuery.ai/
 
 <img width="1910" height="885" alt="image" src="https://github.com/user-attachments/assets/7db26e49-1614-4039-8b8b-956c47ff528e" />
 
+##  Usage Flow
 
+ - Go to /upload — Upload a PDF file (e.g., resume, report).
+ - The file is processed, vectorized, and stored.
+ - Redirects to /chat — Chat interface opens.
+ - Ask any query related to the uploaded content. The app uses LLM + vector search for context-aware answers.
 
 ##  Setup Instructions
 
@@ -128,11 +133,4 @@ CREATE TABLE embeddings (
 
 ```
 
-
-##  Usage Flow
-
- - Go to /upload — Upload a PDF file (e.g., resume, report).
- - The file is processed, vectorized, and stored.
- - Redirects to /chat — Chat interface opens.
- - Ask any query related to the uploaded content. The app uses LLM + vector search for context-aware answers.
 
