@@ -94,7 +94,12 @@ App will run at: http://localhost:5000
 ### 5: Set Up the MySQL Database
 
 ```
-<details> <summary>Click to expand SQL setup code</summary>
+Run the following SQL commands in your MySQL client to create the necessary database and tables for **EduQuery.ai**:
+
+<details>
+<summary>Click to expand SQL setup code</summary>
+
+```sql
 -- Create the database
 CREATE DATABASE eduquery;
 
@@ -117,8 +122,7 @@ CREATE TABLE embeddings (
     embedding TEXT,
     FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
 );
-</details>
-```
+</details> ```
 
 ##  Usage Flow
 
